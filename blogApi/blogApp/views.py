@@ -19,6 +19,7 @@ class UserView(ModelViewSet):
             return Response(data=serialiser.data)
         else:
             return Response(data=serialiser.errors)
+        
 class ProfileView(ModelViewSet):
     queryset=ProfileModel
     serializer_class=ProfileSerialiser
@@ -35,6 +36,13 @@ class ProfileView(ModelViewSet):
         user=request.user
         profile_to_follow.followers.add(user)   # add is used to add in M2M fields
         return Response({"msg":"followed"})
+    
+    @action(methods=["GET"],detail=True)
+    def list_followers(self,request,*args,**kwargs):
+        profile=ProfileModel.objects.get(id=kwargs.get("pk"))
+        followers=profile.followers.all()
+        serialiser=UserSerialiser(followers,many=True)
+        return Response(data=serialiser.data)
 
 class PostView(ModelViewSet):
     queryset=PostModel.objects.all()
@@ -45,6 +53,7 @@ class PostView(ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return super().perform_create(serializer)
+    
     @action(methods=["POST"],detail=True)
     def add_likes(self,request,*args,**kwargs):
         post_to_like=PostModel.objects.get(id=kwargs.get("pk"))
