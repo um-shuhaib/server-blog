@@ -10,3 +10,13 @@ class ProfileModel(models.Model):
 
     def __str__(self):
         return self.user.username 
+    
+class PostModel(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    title=models.CharField(max_length=100)
+    caption=models.TextField()
+    image=models.ImageField(upload_to="post_image")
+    likes=models.ManyToManyField(User,related_name="likes")
+
+    def __str__(self):
+        return self.title

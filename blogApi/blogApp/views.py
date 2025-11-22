@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
 from django.contrib.auth.models import User
-from blogApp.serialiser import UserSerialiser,ProfileSerialiser
+from blogApp.serialiser import UserSerialiser,ProfileSerialiser,PostSerialiser
 from rest_framework.response import Response
-from blogApp.models import ProfileModel 
+from blogApp.models import ProfileModel,PostModel
 from rest_framework import authentication,permissions
 from rest_framework.decorators import action
 
@@ -33,9 +33,23 @@ class ProfileView(ModelViewSet):
     def add_followers(self,request,*args,**kwargs):
         profile_to_follow=ProfileModel.objects.get(id=kwargs.get("pk"))
         user=request.user
-        profile_to_follow.followers.add(user)
+        profile_to_follow.followers.add(user)   # add is used to add in M2M fields
         return Response({"msg":"followed"})
 
+class PostView(ModelViewSet):
+    queryset=PostModel.objects.all()
+    serializer_class=PostSerialiser
+    authentication_classes=[authentication.TokenAuthentication]
+    permission_classes=[permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+        return super().perform_create(serializer)
+    @action(methods=["POST"],detail=True)
+    def add_likes(self,request,*args,**kwargs):
+        post_to_like=PostModel.objects.get(id=kwargs.get("pk"))
+        user=request.user
+        post_to_like.likes.add(user)
+        return Response({"msg":"liked to the post"})
 
 
