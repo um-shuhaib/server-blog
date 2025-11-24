@@ -27,6 +27,9 @@ class PostModel(models.Model):
 
     def likes_count(self):
         return self.likes.all().count()
+    
+    def likes_list(self):
+        return self.likes.all()
 
     def __str__(self):
         return self.title

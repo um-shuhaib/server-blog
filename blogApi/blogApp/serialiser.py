@@ -23,6 +23,7 @@ class PostSerialiser(serializers.ModelSerializer):
     user=UserSerialiser(read_only=True)
     likes=serializers.CharField(read_only=True)
     likes_count=serializers.IntegerField(read_only=True)
+    likes_list=UserSerialiser(read_only=True,many=True)
     class Meta:
         model=PostModel
         fields="__all__"
