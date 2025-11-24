@@ -8,6 +8,13 @@ class ProfileModel(models.Model):
     profile_pic=models.ImageField(upload_to="profile_pic")
     followers=models.ManyToManyField(User,related_name="followers")
 
+
+    def followers_count(self):
+        return self.followers.all().count()
+    
+    def followers_list(self):
+        return self.followers.all()
+
     def __str__(self):
         return self.user.username 
     
