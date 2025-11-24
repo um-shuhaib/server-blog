@@ -25,5 +25,8 @@ class PostModel(models.Model):
     image=models.ImageField(upload_to="post_image")
     likes=models.ManyToManyField(User,related_name="likes")
 
+    def likes_count(self):
+        return self.likes.all().count()
+
     def __str__(self):
         return self.title
