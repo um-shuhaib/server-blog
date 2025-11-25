@@ -7,6 +7,9 @@ from blogApp.models import ProfileModel,PostModel,CommentModel
 from rest_framework import authentication,permissions
 from rest_framework.decorators import action
 
+# jwt authentication
+from rest_framework_simplejwt import authentication as simplejwt_auth
+
 # Create your views here.
 class UserView(ModelViewSet):
     queryset=User.objects.all()
@@ -47,7 +50,8 @@ class ProfileView(ModelViewSet):
 class PostView(ModelViewSet):
     queryset=PostModel.objects.all()
     serializer_class=PostSerialiser
-    authentication_classes=[authentication.TokenAuthentication]
+    # authentication_classes=[authentication.TokenAuthentication]
+    authentication_classes=[simplejwt_auth.JWTAuthentication]
     permission_classes=[permissions.IsAuthenticated]
 
     def perform_create(self, serializer):

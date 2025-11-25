@@ -19,6 +19,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from blogApp import views
 from rest_framework.authtoken import views as tokenview
+from rest_framework_simplejwt.views import TokenObtainPairView,TokenRefreshView
 
 router = DefaultRouter()
 router.register("user",views.UserView,basename="user_view")
@@ -29,4 +30,6 @@ router.register("comment",views.CommentView,basename="comment_view")
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('token/', tokenview.obtain_auth_token),
+    path('access/', TokenObtainPairView.as_view(),name="token_obtain_view"),
+    path('refresh', TokenRefreshView.as_view(),name="token_refresh"),
 ]+router.urls
